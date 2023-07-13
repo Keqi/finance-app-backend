@@ -9,7 +9,7 @@ const pool = new Pool({
 })
 
 const getFinanceRecords = (request, response) => {
-  pool.query('SELECT * FROM finance_records ORDER BY created_at ASC', (error, results) => {
+  pool.query("SELECT to_char(date, 'Mon YYYY') as formatted_date, * FROM finance_records ORDER BY created_at ASC", (error, results) => {
     if (error) {
       response.status(400).json({ error: error.stack })
     } else {
@@ -30,7 +30,18 @@ const postFinanceRecord = (request, response) => {
   })
 }
 
+const deleteFinanceRecord = (request, response) => {
+  pool.query(`DELETE FROM finance_records WHERE id = ${request.params.id}`, (error, results) => {
+    if (error) {
+      response.status(400).json({ error: error.stack })
+    } else {
+      response.status(200).json(results.rows)
+    }
+  })
+}
+
 module.exports = {
   getFinanceRecords,
-  postFinanceRecord
+  postFinanceRecord,
+  deleteFinanceRecord
 }
