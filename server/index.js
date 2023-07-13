@@ -10,6 +10,7 @@ app.use(express.json());
 
 app.get('/finance_records', financeRecords.getFinanceRecords)
 app.post('/finance_records', financeRecords.postFinanceRecord)
+app.put('/finance_records/:id', financeRecords.editFinanceRecord)
 app.delete('/finance_records/:id', financeRecords.deleteFinanceRecord)
 
 app.listen(PORT, () => {

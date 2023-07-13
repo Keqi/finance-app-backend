@@ -9,7 +9,7 @@ const pool = new Pool({
 })
 
 const getFinanceRecords = (request, response) => {
-  pool.query("SELECT to_char(date, 'Mon YYYY') as formatted_date, * FROM finance_records ORDER BY created_at ASC", (error, results) => {
+  pool.query("SELECT to_char(date, 'YYYY-MM-DD') as formatted_date, * FROM finance_records ORDER BY created_at ASC", (error, results) => {
     if (error) {
       response.status(400).json({ error: error.stack })
     } else {
@@ -22,6 +22,18 @@ const postFinanceRecord = (request, response) => {
   const data = request.body;
 
   pool.query(`INSERT INTO finance_records (date, etf_capital, etf_total, bonds_capital, bonds_total, exchange_rate, inflation) VALUES ('${data.date}', ${data.etfCapital}, ${data.etfTotal}, ${data.bondsCapital}, ${data.bondsTotal}, ${data.exchangeRate}, ${data.inflation})`, (error, results) => {
+    if (error) {
+      response.status(400).json({ error: error.stack })
+    } else {
+      response.status(200).json(results.rows)
+    }
+  })
+}
+
+const editFinanceRecord = (request, response) => {
+  const data = request.body;
+
+  pool.query(`UPDATE finance_records SET date = '${data.date}', etf_capital = ${data.etfCapital}, etf_total = ${data.etfTotal}, bonds_capital = ${data.bondsCapital}, exchange_rate = ${data.exchangeRate}, inflation = ${data.inflation} WHERE id = ${request.params.id}`, (error, results) => {
     if (error) {
       response.status(400).json({ error: error.stack })
     } else {
@@ -43,5 +55,6 @@ const deleteFinanceRecord = (request, response) => {
 module.exports = {
   getFinanceRecords,
   postFinanceRecord,
-  deleteFinanceRecord
+  deleteFinanceRecord,
+  editFinanceRecord
 }
