@@ -6,12 +6,10 @@ const app = express();
 const financeRecords = require('./../queries/finance_records')
 
 app.use(cors())
-
-app.get("/api", (req, res) => {
-  res.json({ message: "Hello from server!" });
-});
+app.use(express.json());
 
 app.get('/finance_records', financeRecords.getFinanceRecords)
+app.post('/finance_records', financeRecords.postFinanceRecord)
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);

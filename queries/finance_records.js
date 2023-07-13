@@ -11,7 +11,19 @@ const pool = new Pool({
 const getFinanceRecords = (request, response) => {
   pool.query('SELECT * FROM finance_records ORDER BY created_at ASC', (error, results) => {
     if (error) {
-      response.status(400).json({ error: error })
+      response.status(400).json({ error: error.stack })
+    } else {
+      response.status(200).json(results.rows)
+    }
+  })
+}
+
+const postFinanceRecord = (request, response) => {
+  const data = request.body;
+
+  pool.query(`INSERT INTO finance_records (date, etf_capital, etf_total, bonds_capital, bonds_total, exchange_rate, inflation) VALUES ('${data.date}', ${data.etfCapital}, ${data.etfTotal}, ${data.bondsCapital}, ${data.bondsTotal}, ${data.exchangeRate}, ${data.inflation})`, (error, results) => {
+    if (error) {
+      response.status(400).json({ error: error.stack })
     } else {
       response.status(200).json(results.rows)
     }
@@ -19,5 +31,6 @@ const getFinanceRecords = (request, response) => {
 }
 
 module.exports = {
-  getFinanceRecords
+  getFinanceRecords,
+  postFinanceRecord
 }
