@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
-const sequelize = new Sequelize('postgres://macior:elo123@localhost:5432/finance_manager_database')
+const sequelize = new Sequelize(`postgres://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}:5432/${process.env.DATABASE_NAME}`)
 
 const FinanceRecord = sequelize.define('FinanceRecord', {
   id: {
